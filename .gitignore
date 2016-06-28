@@ -1,0 +1,15 @@
+.vs/
+Common/bin/
+Common/obj/
+Connector/obj/
+SlashCommands/Areas/
+SlashCommands/bin/
+SlashCommandsService/bin/
+packages/
+SlashCommandsService/obj/
+SlashCommands/fonts/
+SlashCommands/obj/
+SlashCommands/Scripts/
+SlashCommands/Views/
+Connector/bin/
+SlashCommands/Content/

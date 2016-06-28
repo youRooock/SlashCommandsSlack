@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0AB8CC69-F0F9-45A2-84C4-F10E77EA5335}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlashCommandsService", "SlashCommandsService\SlashCommandsService.csproj", "{7CA4DB8C-681B-4BDD-AE44-005CF4E3AA81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connector", "Connector\Connector.csproj", "{2025CD36-EBC8-4A7F-8DC6-F2E4C6C40DBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AB8CC69-F0F9-45A2-84C4-F10E77EA5335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AB8CC69-F0F9-45A2-84C4-F10E77EA5335}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AB8CC69-F0F9-45A2-84C4-F10E77EA5335}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AB8CC69-F0F9-45A2-84C4-F10E77EA5335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CA4DB8C-681B-4BDD-AE44-005CF4E3AA81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CA4DB8C-681B-4BDD-AE44-005CF4E3AA81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CA4DB8C-681B-4BDD-AE44-005CF4E3AA81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CA4DB8C-681B-4BDD-AE44-005CF4E3AA81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2025CD36-EBC8-4A7F-8DC6-F2E4C6C40DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2025CD36-EBC8-4A7F-8DC6-F2E4C6C40DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2025CD36-EBC8-4A7F-8DC6-F2E4C6C40DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2025CD36-EBC8-4A7F-8DC6-F2E4C6C40DBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
