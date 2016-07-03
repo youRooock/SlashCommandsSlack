@@ -1,14 +1,4 @@
-﻿using Common;
-using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Mvc;
-using SlashCommandsService.App_Start;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Routing;
+﻿using System.Web.Http;
 
 namespace SlashCommandsService
 {

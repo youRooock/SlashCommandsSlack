@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿
 using SlashCommandsService.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using System.Text;
@@ -18,16 +19,35 @@ namespace Common
             this._commandManager = commandManager;
         }
 
-        public string Process(SlashCommand command)
+        public string Process(NameValueCollection query)
         {
             var allowedChannels = ChannelManager.GetValidChannels();
-
-            if (command.Token != ConfigurationManager.AppSettings["token"])
+            var slashCommand = BuildModel(query);
+            if (slashCommand.Token != ConfigurationManager.AppSettings["token"])
                 return null;
-            if (!allowedChannels.Contains(command.ChannelName))
+            if (!allowedChannels.Contains(slashCommand.ChannelName))
                 return null;
 
-            return _commandManager.Execute(command.Text);
+            return _commandManager.Execute(slashCommand.Text);
+        }
+
+        private SlashCommand BuildModel(NameValueCollection query)
+        {
+            var command = new SlashCommand
+            {
+                Token = query["token"],
+                TeamId = query["team_id"],
+                ChannelId = query["channel_id"],
+                ChannelName = query["channel_name"],
+                Command = query["command"],
+                TeamDomain = query["team_domain"],
+                UserId = query["user_id"],
+                UserName = query["user_name"],
+                Text = query["text"],
+                ResponseUrl = query["response_url"]                
+            };
+
+            return command;
         }
     }
 }

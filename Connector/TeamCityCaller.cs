@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Connector
 {
-    public class TeamCityCaller : ServiceCaller
+    public class TeamCityCaller : ServiceCaller, IContiniousIntegrationCaller
     {
         public void QueueBuild(string buildId)
         {

@@ -1,4 +1,5 @@
 ﻿using Common;
+using Newtonsoft.Json;
 using SlashCommandsService.Models;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,13 @@ namespace SlashCommandsService.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage Start([FromUri] SlashCommand command)
+        public HttpResponseMessage Start(HttpRequestMessage message)
         {
+            var values = message.RequestUri.ParseQueryString();
+            var responseBody = _commandHandler.Process(values);
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(responseBody);
             response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            response.Content = new StringContent(_commandHandler.Process(command));
-            response.StatusCode = HttpStatusCode.OK;
 
             return response;
         }
