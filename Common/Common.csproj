@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\UrlParameterAttribute.cs" />
     <Compile Include="ChannelManager.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="CommandManager.cs" />

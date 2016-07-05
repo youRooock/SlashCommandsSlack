@@ -19,7 +19,6 @@ namespace Common
             _ciCaller = ciCaller;
             _commands = new Dictionary<string, string>()
             {
-                { "help", "Available commands: help"},
                 { "run mr", "Running MailRu tests" },
                 { "run ok", "Running Odnoklassniki tests" },
                 { "run pp", "Running Portal tests" }
@@ -29,18 +28,19 @@ namespace Common
         public string Execute(string command)
         {
             string result;
-            
+            command = command.ToLower();
+
             if (!_commands.TryGetValue(command, out result))
                 result = "Type 'help' for supported commands";
 
-            if(command == "help")
+            if (command == "help")
             {
-                result = "Available commands: run mr, run ok, run pp";
+                result = "Available commands: " + string.Join(", ", _commands.Keys.ToArray());
             }
 
             else
             {
-                _ciCaller.QueueBuild();
+              //  _ciCaller.QueueBuild();
             }
 
             var response = new Response

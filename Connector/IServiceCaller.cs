@@ -9,6 +9,6 @@ namespace Connector
 {
     public interface IServiceCaller
     {
-        Task<HttpResponseMessage> CallAsync(string uri, string method, HttpContent data);
+        Task<HttpResponseMessage> CallAsync(string uri, string method, string netCredentials, HttpContent data);
     }
 }

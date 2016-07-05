@@ -1,4 +1,5 @@
 ﻿
+using Common.Attributes;
 using SlashCommandsService.Models;
 using System;
 using System.Collections.Generic;
@@ -31,23 +32,24 @@ namespace Common
             return _commandManager.Execute(slashCommand.Text);
         }
 
-        private SlashCommand BuildModel(NameValueCollection query)
+        private static SlashCommand BuildModel(NameValueCollection data)
         {
-            var command = new SlashCommand
-            {
-                Token = query["token"],
-                TeamId = query["team_id"],
-                ChannelId = query["channel_id"],
-                ChannelName = query["channel_name"],
-                Command = query["command"],
-                TeamDomain = query["team_domain"],
-                UserId = query["user_id"],
-                UserName = query["user_name"],
-                Text = query["text"],
-                ResponseUrl = query["response_url"]                
-            };
+            var result = new SlashCommand();
 
-            return command;
+            foreach (var field in typeof(SlashCommand).GetFields())
+            {
+                foreach (var attribute in field.GetCustomAttributes(true))
+                {
+                    if (attribute.GetType().Name == "UrlParameterAttribute")
+                    {
+                        var request = attribute as UrlParameterAttribute;
+
+                        if (data[request.Name] != null)
+                            field.SetValue(result, data.Get(request.Name));
+                    }
+                }
+            }
+            return result;
         }
     }
 }
