@@ -20,8 +20,11 @@ namespace Connector
 
         public async void QueueBuild(string buildId)
         {
-            var requestedUrl = _url + "/httpAuth/action.html?add2Queue=" + buildId;
-            await CallAsync(requestedUrl, "POST", _credentials);
+          if (buildId == null)
+            return;
+
+          var requestedUrl = _url + "/httpAuth/action.html?add2Queue=" + buildId;
+          await CallAsync(requestedUrl, "POST", _credentials);
         }
 
         public void GetLastBuildInfo(string buildId)

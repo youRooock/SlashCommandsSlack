@@ -26,7 +26,7 @@ namespace Common
             var slashCommand = BuildModel(query);
             if (slashCommand.Token != ConfigurationManager.AppSettings["token"])
                 return null;
-            if (!allowedChannels.Contains(slashCommand.ChannelName))
+            if (!allowedChannels.Contains(slashCommand.ChannelId))
                 return null;
 
             return _commandManager.Execute(slashCommand.Text);

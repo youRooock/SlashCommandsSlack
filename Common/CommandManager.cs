@@ -19,32 +19,37 @@ namespace Common
             _ciCaller = ciCaller;
             _commands = new Dictionary<string, string>()
             {
-                { "run mr", "Running MailRu tests" },
-                { "run ok", "Running Odnoklassniki tests" },
-                { "run pp", "Running Portal tests" }
+                { "run mr", "SocialBank_MailRuTestsProd" },
+                { "run ok", "SocialBank_OdnoklassnikiTestsProd" },
+                { "run pp", "PortalBank_SileniumTests" }
             };
         }
 
         public string Execute(string command)
         {
             string result;
+            string responseType = "ephemeral";
             command = command.ToLower();
 
-            if (!_commands.TryGetValue(command, out result))
+            if (!_commands.TryGetValue(command, out result) && command != "help")
                 result = "Type 'help' for supported commands";
 
-            if (command == "help")
-            {
+            else if (command == "help")
                 result = "Available commands: " + string.Join(", ", _commands.Keys.ToArray());
-            }
 
             else
             {
-              //  _ciCaller.QueueBuild();
+              string buildId;
+              result = "Running...";
+              responseType = "in_channel";
+
+              _commands.TryGetValue(command, out buildId);
+              _ciCaller.QueueBuild(buildId);
             }
 
             var response = new Response
             {
+                ResponseType = responseType,
                 Text = result
             };
 
