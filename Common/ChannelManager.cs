@@ -10,7 +10,8 @@ namespace Common
     {
         private static List<string> _list = new List<string>()
         {
-            "selenium"
+            "G0J14J9N3",
+            "G0VGPDGQJ"
         };
 
         public static List<string> GetValidChannels()
