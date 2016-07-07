@@ -10,6 +10,8 @@ namespace Common
 {
     public interface ICommandHandler
     {
-        string Process(NameValueCollection query);
+        string QueueBuild(NameValueCollection query);
+        string GetInfo(NameValueCollection query);
+        Task<string> GetDetails(NameValueCollection query);
     }
 }

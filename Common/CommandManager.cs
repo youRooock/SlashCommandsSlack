@@ -19,41 +19,73 @@ namespace Common
             _ciCaller = ciCaller;
             _commands = new Dictionary<string, string>()
             {
-                { "run mr", "SocialBank_MailRuTestsProd" },
-                { "run ok", "SocialBank_OdnoklassnikiTestsProd" },
-                { "run pp", "PortalBank_SileniumTests" }
+                { "mr", "SocialBank_MailRuTestsProd" },
+                { "ok", "SocialBank_OdnoklassnikiTestsProd" },
+                { "pp", "PortalBank_SileniumTests" }
             };
         }
 
-        public string Execute(string command)
+        public string QueueBuild(string command)
         {
-            string result;
-            string responseType = "ephemeral";
-            command = command.ToLower();
+          string buildId;
+          command = command.ToLower();
+          _commands.TryGetValue(command, out buildId);
 
-            if (!_commands.TryGetValue(command, out result) && command != "help")
-                result = "Type 'help' for supported commands";
+          if (buildId == null)
+            return null;
 
-            else if (command == "help")
-                result = "Available commands: " + string.Join(", ", _commands.Keys.ToArray());
+          _ciCaller.QueueBuild(buildId);
 
-            else
-            {
-              string buildId;
-              result = "Running...";
-              responseType = "in_channel";
+          var response = new Response
+          {
+            ResponseType = "in_channel",
+            Text = "Running " + command
+          };
 
-              _commands.TryGetValue(command, out buildId);
-              _ciCaller.QueueBuild(buildId);
-            }
-
-            var response = new Response
-            {
-                ResponseType = responseType,
-                Text = result
-            };
-
-            return JsonConvert.SerializeObject(response);
+          return JsonConvert.SerializeObject(response);
         }
+
+        public string GetInfo()
+        {
+          var response = new Response
+          {
+            ResponseType = "ephemeral", // only visible for user . Use "in_channel" if you want this message to be visile for all members
+            Text = "Available commands:",
+            Attachments = new List<Attachments>
+            {
+              new Attachments { Text = "/run", Color = "normal"},
+              new Attachments { Text = "/details", Color = "normal"}
+            }
+          };
+
+          return JsonConvert.SerializeObject(response);
+        }
+
+        public async Task<string> GetDetails(string command)
+        {
+          string buildId;
+          command = command.ToLower();
+          _commands.TryGetValue(command, out buildId);
+
+          if (buildId == null)
+            return null;
+
+          var buildInfo = await _ciCaller.GetLastBuildInfo(buildId);
+
+          var response = new Response
+          {
+            ResponseType = "in_channel",
+            Text = "Last build information " + command,
+            Attachments = new List<Attachments>
+            {
+              new Attachments { Text = "Passed: " + buildInfo.Passed, Color = "good"},
+              new Attachments { Text = "Failed: " + buildInfo.Failed, Color = "danger"},
+              new Attachments { Text = "Errors: " + buildInfo.Errors, Color = "warning"},
+            }
+          };
+
+          return JsonConvert.SerializeObject(response);
+        }
+
     }
 }

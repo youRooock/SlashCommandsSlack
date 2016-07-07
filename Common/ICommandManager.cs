@@ -8,6 +8,8 @@ namespace Common
 {
     public interface ICommandManager
     {
-        string Execute(string command);
+        string GetInfo();
+        string QueueBuild(string command);
+        Task<string> GetDetails(string command);
     }
 }

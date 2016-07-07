@@ -11,5 +11,11 @@ namespace Common.Models
     {
         [JsonProperty("text")]
         public string Text;
+
+        [JsonProperty("color")]
+        public string Color;
+
+        [JsonProperty("fallback")]
+        public string Fallback;
     }
 }

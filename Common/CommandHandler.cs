@@ -20,17 +20,47 @@ namespace Common
             this._commandManager = commandManager;
         }
 
-        public string Process(NameValueCollection query)
+        public string QueueBuild(NameValueCollection query)
         {
-            var allowedChannels = ChannelManager.GetValidChannels();
-            var slashCommand = BuildModel(query);
-            if (slashCommand.Token != ConfigurationManager.AppSettings["token"])
-                return null;
-            if (!allowedChannels.Contains(slashCommand.ChannelId))
-                return null;
+          var slashCommand = BuildModel(query);
 
-            return _commandManager.Execute(slashCommand.Text);
+          if (!IsCommandValid(slashCommand))
+            return null;
+
+          return _commandManager.QueueBuild(slashCommand.Text);
         }
+
+        public string GetInfo(NameValueCollection query)
+        {
+          var slashCommand = BuildModel(query);
+
+          if (!IsCommandValid(slashCommand))
+            return null;
+
+          return _commandManager.GetInfo();
+        }
+
+        public async Task<string> GetDetails(NameValueCollection query)
+        {
+          var slashCommand = BuildModel(query);
+
+          if (!IsCommandValid(slashCommand))
+            return null;
+
+          return await _commandManager.GetDetails(slashCommand.Text);
+        }
+
+      private bool IsCommandValid(SlashCommand slashCommand)
+      {
+        var allowedChannels = ChannelManager.GetValidChannels();
+
+        if (slashCommand.Token != ConfigurationManager.AppSettings["token1"] && slashCommand.Token != ConfigurationManager.AppSettings["token2"] && slashCommand.Token != ConfigurationManager.AppSettings["token3"])
+          return false;
+        if (!allowedChannels.Contains(slashCommand.ChannelId))
+          return false;
+
+        return true;
+      }
 
         private static SlashCommand BuildModel(NameValueCollection data)
         {

@@ -16,6 +16,6 @@ namespace Common.Models
         public string Text;
 
         [JsonProperty("attachments")]
-        public Attachments Attachments;
+        public List<Attachments> Attachments;
     }
 }
