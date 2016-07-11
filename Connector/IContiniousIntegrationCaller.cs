@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,5 +12,6 @@ namespace Connector
     {
         void QueueBuild(string buildId);
         Task<TeamCityBuildInfo> GetLastBuildInfo(string buildId);
+        NameValueCollection GetArtifacts(string buildId);
     }
 }

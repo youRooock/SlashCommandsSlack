@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -17,11 +18,17 @@ namespace Connector
     {
         private readonly string _credentials;
         private readonly string _url;
-
+        private readonly string _teamCityArtifactsLocation;
+        private readonly string _artifactPath;
+        private readonly string _logFilePath;
+    
         public TeamCityCaller()
         {
-            _credentials = ConfigurationManager.AppSettings["teamcityCredentials"];
-            _url = ConfigurationManager.AppSettings["teamcityUrl"];
+          _credentials = ConfigurationManager.AppSettings["teamcityCredentials"];
+          _url = ConfigurationManager.AppSettings["teamcityUrl"];
+          _teamCityArtifactsLocation = ConfigurationManager.AppSettings["teamcityArtifactsLocation"];
+          _artifactPath = ConfigurationManager.AppSettings["artifact"];
+          _logFilePath = ConfigurationManager.AppSettings["logFileLocation"];     
         }
 
         public async void QueueBuild(string buildId)
@@ -38,15 +45,40 @@ namespace Connector
           return await GetBuild(buildId);
         }
 
-        public void GetArtifacts(string buildId)
+        public NameValueCollection GetArtifacts(string buildId)
         {
-            throw new NotImplementedException();
-        }
+          var collection = new NameValueCollection();
 
+          try
+          {
+            var directory =
+              new DirectoryInfo(_teamCityArtifactsLocation + buildId)
+                .GetDirectories()
+                .OrderBy(r => r.LastWriteTime)
+                 .LastOrDefault();
+
+            if (directory != null)
+            {
+              var file = directory.GetFiles().Where(r => r.Name == "TestResult.html").FirstOrDefault();
+              collection.Add("time", file.LastWriteTime.ToString());
+
+              File.Copy(file.DirectoryName + "\\" + file.Name, _artifactPath + buildId + "\\" + "TestResult.html", true);
+            }
+          }
+          catch (Exception e)
+          {
+            return null;
+          }
+
+          collection.Add("url", ConfigurationManager.AppSettings["remoteUrl"] + buildId + "/TestResult.html");
+
+          return collection;
+        }
+      
         private async Task<TeamCityBuildInfo> GetBuild(string buildType)
         {
           string id;
-          var buildInfo = await CallAsync("http://webintegration.plarium.local:8080/httpAuth/app/rest/buildTypes/" + buildType + "/builds?locator=start:0,count:1", "GET", _credentials);
+          var buildInfo = await CallAsync(_url + "/httpAuth/app/rest/buildTypes/" + buildType + "/builds?locator=start:0,count:1", "GET", _credentials);
           var xml =  await buildInfo.Content.ReadAsStringAsync();
           var document = new XmlDocument();
           document.LoadXml(xml);
@@ -64,7 +96,7 @@ namespace Connector
 
           TeamCityBuildInfo teamcityBuildModel;
 
-          using (var reader = new StreamReader(ConfigurationManager.AppSettings["logFileLocation"]))
+          using (var reader = new StreamReader(_logFilePath))
           {
             var data = await reader.ReadToEndAsync();
             var regexPassed = new Regex(@"Passed: (\d+)");
@@ -73,6 +105,7 @@ namespace Connector
 
             teamcityBuildModel = new TeamCityBuildInfo
             {
+              BuildId = id,
               Passed = regexPassed.Match(data).GetNumbers(),
               Failed = regexFailed.Match(data).GetNumbers(),
               Errors = regexErrors.Match(data).GetNumbers()

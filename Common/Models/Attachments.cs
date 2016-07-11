@@ -17,5 +17,17 @@ namespace Common.Models
 
         [JsonProperty("fallback")]
         public string Fallback;
+
+        [JsonProperty("title")]
+        public string Title;
+
+        [JsonProperty("title_link")]
+        public string TitleLink;
+
+        [JsonProperty("footer")]
+        public string Footer;
+
+        [JsonProperty("footer_icon")]
+        public string FooterIcon;
     }
 }

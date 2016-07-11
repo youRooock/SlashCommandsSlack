@@ -22,6 +22,9 @@ namespace Common
 
         public string QueueBuild(NameValueCollection query)
         {
+          if (query == null)
+            return null;
+
           var slashCommand = BuildModel(query);
 
           if (!IsCommandValid(slashCommand))
@@ -32,6 +35,9 @@ namespace Common
 
         public string GetInfo(NameValueCollection query)
         {
+          if (query == null)
+            return null;
+
           var slashCommand = BuildModel(query);
 
           if (!IsCommandValid(slashCommand))
@@ -42,6 +48,9 @@ namespace Common
 
         public async Task<string> GetDetails(NameValueCollection query)
         {
+          if (query == null)
+            return null;
+
           var slashCommand = BuildModel(query);
 
           if (!IsCommandValid(slashCommand))
@@ -54,7 +63,8 @@ namespace Common
       {
         var allowedChannels = ChannelManager.GetValidChannels();
 
-        if (slashCommand.Token != ConfigurationManager.AppSettings["token1"] && slashCommand.Token != ConfigurationManager.AppSettings["token2"] && slashCommand.Token != ConfigurationManager.AppSettings["token3"])
+        if (slashCommand.Token != ConfigurationManager.AppSettings["token1"] && slashCommand.Token != ConfigurationManager.AppSettings["token2"]
+          && slashCommand.Token != ConfigurationManager.AppSettings["token3"] && slashCommand.Token != ConfigurationManager.AppSettings["token4"])
           return false;
         if (!allowedChannels.Contains(slashCommand.ChannelId))
           return false;
@@ -62,7 +72,7 @@ namespace Common
         return true;
       }
 
-        private static SlashCommand BuildModel(NameValueCollection data)
+        private SlashCommand BuildModel(NameValueCollection data)
         {
             var result = new SlashCommand();
 

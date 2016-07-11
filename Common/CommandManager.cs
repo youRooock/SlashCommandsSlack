@@ -28,6 +28,9 @@ namespace Common
         public string QueueBuild(string command)
         {
           string buildId;
+          if (command == null)
+            return null;
+
           command = command.ToLower();
           _commands.TryGetValue(command, out buildId);
 
@@ -39,7 +42,10 @@ namespace Common
           var response = new Response
           {
             ResponseType = "in_channel",
-            Text = "Running " + command
+            Attachments = new List<Attachments>
+            {
+              new Attachments { Text = "Running " + command, Color = "normal"}
+            }
           };
 
           return JsonConvert.SerializeObject(response);
@@ -64,6 +70,9 @@ namespace Common
         public async Task<string> GetDetails(string command)
         {
           string buildId;
+          if (command == null)
+            return null;
+
           command = command.ToLower();
           _commands.TryGetValue(command, out buildId);
 
@@ -71,6 +80,10 @@ namespace Common
             return null;
 
           var buildInfo = await _ciCaller.GetLastBuildInfo(buildId);
+          var artifacts = _ciCaller.GetArtifacts(buildId);
+
+          if (buildInfo == null || artifacts == null)
+            return null;
 
           var response = new Response
           {
@@ -81,11 +94,18 @@ namespace Common
               new Attachments { Text = "Passed: " + buildInfo.Passed, Color = "good"},
               new Attachments { Text = "Failed: " + buildInfo.Failed, Color = "danger"},
               new Attachments { Text = "Errors: " + buildInfo.Errors, Color = "warning"},
+              new Attachments
+              {
+                Title = "Report #" + buildInfo.BuildId , 
+                Color = "normal", 
+                TitleLink = artifacts["url"], 
+                Footer = "Created at " + artifacts["time"] ,
+                FooterIcon = "https://platform.slack-edge.com/img/default_application_icon.png"
+              }
             }
           };
 
           return JsonConvert.SerializeObject(response);
         }
-
     }
 }

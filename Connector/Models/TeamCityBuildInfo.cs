@@ -8,6 +8,7 @@ namespace Connector.Models
 {
   public class TeamCityBuildInfo
   {
+    public string BuildId;
     public int Passed;
     public int Failed;
     public int Errors;
