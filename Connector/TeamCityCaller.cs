@@ -92,7 +92,7 @@ namespace Connector
             return null;
           }           
 
-          DownloadFileAsync("http://webintegration.plarium.local:8080/httpAuth/downloadBuildLog.html?buildId=" + id, _credentials);
+          DownloadFileAsync(_url + "/httpAuth/downloadBuildLog.html?buildId=" + id, _credentials);
 
           TeamCityBuildInfo teamcityBuildModel;
 
